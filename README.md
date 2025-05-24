@@ -4,7 +4,7 @@ This repository contains Ansible playbooks for setting up a complete development
 
 ## Features
 
-- Install necessary packages and dependencies
+- Install the necessary packages and dependencies
 - Configure system settings for development
 - Set up development tools and environments
 
@@ -85,4 +85,4 @@ If you encounter any issues:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+The MIT License as described in this project's LICENSE file.
