@@ -1,0 +1,58 @@
+---
+- name: Install and configure Homebrew
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Check if Homebrew is already installed
+      command: which brew
+      register: brew_which
+      changed_when: false
+      failed_when: false
+
+    - name: Install Homebrew
+      shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      when: brew_which.rc != 0
+
+    - name: Check Homebrew installation path
+      stat:
+        path: /home/linuxbrew/.linuxbrew/bin/brew
+      register: linuxbrew_path
+      when: brew_which.rc != 0
+
+    - name: Check alternative Homebrew installation path
+      stat:
+        path: "{{ ansible_env.HOME }}/.linuxbrew/bin/brew"
+      register: home_linuxbrew_path
+      when: brew_which.rc != 0 and not linuxbrew_path.stat.exists
+
+    - name: Add Homebrew to PATH in .zshrc (system-wide installation)
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.zshrc"
+        line: 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
+        state: present
+        create: yes
+      when: brew_which.rc != 0 and linuxbrew_path.stat.exists
+
+    - name: Add Homebrew to PATH in .zshrc (user installation)
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.zshrc"
+        line: 'eval "$({{ ansible_env.HOME }}/.linuxbrew/bin/brew shellenv)"'
+        state: present
+        create: yes
+      when: brew_which.rc != 0 and not linuxbrew_path.stat.exists and home_linuxbrew_path.stat.exists
+
+    - name: Initialize Homebrew environment (system-wide installation)
+      shell: eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      args:
+        executable: /bin/zsh
+      when: brew_which.rc != 0 and linuxbrew_path.stat.exists
+
+    - name: Initialize Homebrew environment (user installation)
+      shell: eval "$({{ ansible_env.HOME }}/.linuxbrew/bin/brew shellenv)"
+      args:
+        executable: /bin/zsh
+      when: brew_which.rc != 0 and not linuxbrew_path.stat.exists and home_linuxbrew_path.stat.exists
+
+    - name: Display Homebrew installation status
+      debug:
+        msg: "Homebrew is {{ 'already installed' if brew_which.rc == 0 else 'now installed' }}."

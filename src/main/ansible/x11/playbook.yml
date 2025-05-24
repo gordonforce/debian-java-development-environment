@@ -1,0 +1,32 @@
+---
+- name: Install X11 packages
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install X11 packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - xorg
+        - xserver-xorg
+        - xinit
+        - xterm
+        - x11-xserver-utils
+        - x11-utils
+        - x11-session-utils
+
+    - name: Check if X11 is installed
+      command: which X
+      register: x11_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Display X11 installation status
+      debug:
+        msg: "X11 packages are {{ 'successfully installed' if x11_installed.rc == 0 else 'not properly installed' }}."

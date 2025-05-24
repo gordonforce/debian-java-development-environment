@@ -1,0 +1,59 @@
+---
+- name: Main playbook for Chromebook Plus Development Environment
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Display welcome message
+      debug:
+        msg: |
+          Welcome to the Chromebook Plus Development Environment setup!
+          This playbook will install and configure all the necessary packages and tools.
+
+- name: Include apt packages playbooks
+  import_playbook: x11/playbook.yml
+
+- name: Include Git playbook
+  import_playbook: git/playbook.yml
+
+- name: Include GnuPG playbook
+  import_playbook: gnupg/playbook.yml
+
+- name: Include Oh My Zsh playbook
+  import_playbook: oh-my-zsh/playbook.yml
+
+- name: Include Homebrew playbook
+  import_playbook: homebrew/playbook.yml
+
+- name: Include Node.js playbook
+  import_playbook: node/playbook.yml
+
+- name: Include Python playbook
+  import_playbook: python/playbook.yml
+
+- name: Include Ruby playbook
+  import_playbook: ruby/playbook.yml
+
+- name: Include Rust playbook
+  import_playbook: rust/playbook.yml
+
+- name: Include OpenJDK playbook
+  import_playbook: openjdk/playbook.yml
+
+- name: Include Maven playbook
+  import_playbook: maven/playbook.yml
+
+- name: Include GitHub CLI playbook
+  import_playbook: gh/playbook.yml
+
+- name: Include Pass playbook
+  import_playbook: pass/playbook.yml
+
+- name: Final setup
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Display completion message
+      debug:
+        msg: |
+          Chromebook Plus Development Environment setup completed successfully!
+          Please restart your shell or run 'source ~/.zshrc' to apply all changes.

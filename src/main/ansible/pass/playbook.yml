@@ -1,0 +1,57 @@
+---
+- name: Install and configure pass for secret management
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Install pass via Homebrew
+      homebrew:
+        name: pass
+        state: present
+
+    - name: Check if pass is already initialized
+      stat:
+        path: "{{ ansible_env.HOME }}/.password-store"
+      register: password_store_dir
+
+    - name: Check if GPG key exists
+      shell: gpg --list-secret-keys | grep -q "Gordon Force" && echo "exists" || echo "not exists"
+      register: gpg_key_exists
+      changed_when: false
+
+    - name: Get GPG key ID if it exists
+      shell: gpg --list-secret-keys --keyid-format LONG "Gordon Force" | grep sec | awk '{print $2}' | cut -d'/' -f2
+      register: gpg_key_id
+      changed_when: false
+      when: gpg_key_exists.stdout == "exists"
+
+    - name: Initialize pass with GPG key
+      command: pass init "{{ gpg_key_id.stdout }}"
+      when: not password_store_dir.stat.exists and gpg_key_exists.stdout == "exists" and gpg_key_id.stdout != ""
+
+    - name: Check if GitHub API token exists in .zshrc
+      shell: grep -q "export GH_ENTERPRISE_TOKEN=" "{{ ansible_env.HOME }}/.zshrc" && echo "exists" || echo "not exists"
+      register: gh_token_in_zshrc
+      changed_when: false
+      failed_when: false
+
+    - name: Extract GitHub API token from .zshrc
+      shell: grep "export GH_ENTERPRISE_TOKEN=" "{{ ansible_env.HOME }}/.zshrc" | cut -d'"' -f2
+      register: gh_token
+      changed_when: false
+      when: gh_token_in_zshrc.stdout == "exists"
+
+    - name: Store GitHub API token in pass
+      shell: echo "{{ gh_token.stdout }}" | pass insert -e github/gh_enterprise_token
+      when: gh_token_in_zshrc.stdout == "exists" and gh_token.stdout != "" and password_store_dir.stat.exists
+
+    - name: Update .zshrc to use pass for GitHub API token
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.zshrc"
+        regexp: 'export GH_ENTERPRISE_TOKEN='
+        line: 'export GH_ENTERPRISE_TOKEN="$(pass github/gh_enterprise_token)"'
+        state: present
+      when: password_store_dir.stat.exists
+
+    - name: Display pass initialization status
+      debug:
+        msg: "pass is {{ 'already initialized' if password_store_dir.stat.exists else 'now initialized' }} for secret management."

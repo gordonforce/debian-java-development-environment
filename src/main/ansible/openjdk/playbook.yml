@@ -1,0 +1,75 @@
+---
+- name: Install and configure OpenJDK
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Install OpenJDK 17 via Homebrew
+      homebrew:
+        name: openjdk@17
+        state: present
+
+    - name: Install OpenJDK 21 via Homebrew
+      homebrew:
+        name: openjdk@21
+        state: present
+
+    - name: Install jenv via Homebrew
+      homebrew:
+        name: jenv
+        state: present
+
+    - name: Create .jenv directory if it doesn't exist
+      file:
+        path: "{{ ansible_env.HOME }}/.jenv"
+        state: directory
+        mode: '0755'
+
+    - name: Add jenv initialization to .zshrc
+      line-infile:
+        path: "{{ ansible_env.HOME }}/.zshrc"
+        line: 'export PATH="$HOME/.jenv/bin:$PATH"'
+        state: present
+        create: yes
+
+    - name: Add jenv initialization to .zshrc
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.zshrc"
+        line: 'eval "$(jenv init -)"'
+        state: present
+        create: yes
+
+    - name: Get Homebrew prefix
+      command: brew --prefix
+      register: brew_prefix
+      changed_when: false
+
+    - name: Add JDK 17 to jenv
+      shell: |
+        export PATH="{{ ansible_env.HOME }}/.jenv/bin:$PATH"
+        eval "$(jenv init -)"
+        jenv add "{{ brew_prefix.stdout }}/opt/openjdk@17"
+      args:
+        executable: /bin/zsh
+      register: jenv_add_17
+      changed_when: jenv_add_17.rc == 0
+      failed_when: jenv_add_17.rc != 0 and "already exists" not in jenv_add_17.stderr
+
+    - name: Add JDK 21 to jenv
+      shell: |
+        export PATH="{{ ansible_env.HOME }}/.jenv/bin:$PATH"
+        eval "$(jenv init -)"
+        jenv add "{{ brew_prefix.stdout }}/opt/openjdk@21"
+      args:
+        executable: /bin/zsh
+      register: jenv_add_21
+      changed_when: jenv_add_21.rc == 0
+      failed_when: jenv_add_21.rc != 0 and "already exists" not in jenv_add_21.stderr
+
+    - name: Set global Java version to 21
+      shell: |
+        export PATH="{{ ansible_env.HOME }}/.jenv/bin:$PATH"
+        eval "$(jenv init -)"
+        jenv global 21
+      args:
+        executable: /bin/zsh
+      changed_when: false

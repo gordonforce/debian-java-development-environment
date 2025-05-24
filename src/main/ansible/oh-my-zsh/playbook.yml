@@ -1,0 +1,34 @@
+---
+- name: Install and configure Oh My Zsh
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Check if Oh My Zsh is already installed
+      stat:
+        path: "{{ ansible_env.HOME }}/.oh-my-zsh"
+      register: oh_my_zsh_dir
+
+    - name: Install Oh My Zsh
+      shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+      args:
+        executable: /bin/zsh
+      when: not oh_my_zsh_dir.stat.exists
+
+    - name: Set the default theme (robbyrussell)
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.zshrc"
+        regexp: '^ZSH_THEME='
+        line: 'ZSH_THEME="robbyrussell"'
+        state: present
+      when: not oh_my_zsh_dir.stat.exists
+
+    - name: Ensure zsh is the default shell
+      user:
+        name: "{{ ansible_env.USER }}"
+        shell: /bin/zsh
+      become: true
+      when: ansible_facts['ansible_pkg_mgr'] == 'apt'
+
+    - name: Display Oh My Zsh installation status
+      debug:
+        msg: "Oh My Zsh is {{ 'already installed' if oh_my_zsh_dir.stat.exists else 'now installed' }} with the default theme."

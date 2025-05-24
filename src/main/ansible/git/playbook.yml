@@ -1,0 +1,34 @@
+---
+- name: Install and configure Git
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
+    - name: Install Git GUI
+      apt:
+        name: git-gui
+        state: present
+
+    - name: Configure Git global settings
+      git_config:
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        scope: global
+      loop:
+        - { name: "user.name", value: "Gordon Force" }
+        - { name: "user.email", value: "gordonff@gmail.com" }
+        - { name: "core.editor", value: "vim" }
+        - { name: "pull.rebase", value: "local" }
+        - { name: "push.default", value: "simple" }
+        - { name: "init.defaultBranch", value: "main" }
+        - { name: "color.ui", value: "auto" }
+      become: false

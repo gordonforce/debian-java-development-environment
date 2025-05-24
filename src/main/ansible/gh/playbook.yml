@@ -1,0 +1,60 @@
+---
+- name: Install and configure GitHub CLI
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Install GitHub CLI via Homebrew
+      homebrew:
+        name: gh
+        state: present
+
+    - name: Check if GitHub CLI is installed
+      command: which gh
+      register: gh_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Check if GitHub CLI is authenticated
+      shell: gh auth status
+      register: gh_auth_status
+      changed_when: false
+      failed_when: false
+      when: gh_installed.rc == 0
+
+    - name: Display GitHub CLI authentication status
+      debug:
+        msg: "GitHub CLI is {{ 'authenticated' if gh_auth_status.rc == 0 else 'not authenticated' }}."
+      when: gh_installed.rc == 0
+
+    - name: Provide instructions for GitHub CLI authentication
+      debug:
+        msg: |
+          To authenticate GitHub CLI, please run the following command:
+          gh auth login
+
+          This will guide you through the authentication process.
+          You can choose to authenticate with your GitHub.com credentials,
+          with a GitHub Enterprise Server, or with a GitHub token.
+      when: gh_installed.rc == 0 and (gh_auth_status.rc != 0 or gh_auth_status.rc is not defined)
+
+    - name: Check if GPG key exists
+      shell: gpg --list-secret-keys | grep -q "Gordon Force" && echo "exists" || echo "not exists"
+      register: gpg_key_exists
+      changed_when: false
+      when: gh_installed.rc == 0 and gh_auth_status.rc == 0
+
+    - name: Get GPG key ID if it exists
+      shell: gpg --list-secret-keys --keyid-format LONG "Gordon Force" | grep sec | awk '{print $2}' | cut -d'/' -f2
+      register: gpg_key_id
+      changed_when: false
+      when: gh_installed.rc == 0 and gh_auth_status.rc == 0 and gpg_key_exists.stdout == "exists"
+
+    - name: Export GPG public key
+      shell: gpg --armor --export "{{ gpg_key_id.stdout }}"
+      register: gpg_public_key
+      changed_when: false
+      when: gh_installed.rc == 0 and gh_auth_status.rc == 0 and gpg_key_exists.stdout == "exists" and gpg_key_id.stdout != ""
+
+    - name: Add GPG key to GitHub
+      shell: echo "{{ gpg_public_key.stdout }}" | gh gpg-key add -
+      when: gh_installed.rc == 0 and gh_auth_status.rc == 0 and gpg_key_exists.stdout == "exists" and gpg_key_id.stdout != ""

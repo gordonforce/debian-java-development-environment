@@ -1,0 +1,62 @@
+---
+- name: Install and configure Maven with mvnvm
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Install mvnvm via Homebrew
+      homebrew:
+        name: mvnvm
+        state: present
+
+    - name: Check if mvnvm is already initialized in .zshrc
+      command: grep -q "mvnvm.sh" "{{ ansible_env.HOME }}/.zshrc"
+      register: mvnvm_in_zshrc
+      changed_when: false
+      failed_when: false
+
+    - name: Add mvnvm initialization to .zshrc
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.zshrc"
+        line: 'source "$HOME/.mvnvm/mvnvm.sh"'
+        state: present
+        create: yes
+      when: mvnvm_in_zshrc.rc != 0
+
+    - name: Check if .mvnvm directory exists
+      stat:
+        path: "{{ ansible_env.HOME }}/.mvnvm"
+      register: mvnvm_dir
+
+    - name: Wait for mvnvm installation to complete
+      wait_for:
+        path: "{{ ansible_env.HOME }}/.mvnvm/mvnvm.sh"
+        state: present
+        timeout: 60
+      when: mvnvm_dir.stat.exists
+
+    - name: Set Maven version to 3.9.6
+      shell: |
+        source "{{ ansible_env.HOME }}/.mvnvm/mvnvm.sh"
+        mvnvm use 3.9.6
+      args:
+        executable: /bin/zsh
+      register: mvnvm_set_version
+      changed_when: mvnvm_set_version.rc == 0
+      failed_when: mvnvm_set_version.rc != 0
+      when: mvnvm_dir.stat.exists
+
+    - name: Verify Maven installation
+      shell: |
+        source "{{ ansible_env.HOME }}/.mvnvm/mvnvm.sh"
+        mvn --version
+      args:
+        executable: /bin/zsh
+      register: maven_version
+      changed_when: false
+      failed_when: maven_version.rc != 0
+      when: mvnvm_dir.stat.exists
+
+    - name: Display Maven version
+      debug:
+        msg: "Maven version {{ maven_version.stdout_lines[0] if maven_version.stdout is defined else 'unknown' }} is configured."
+      when: mvnvm_dir.stat.exists
