@@ -1,12 +1,12 @@
 ---
-- name: Main playbook for Chromebook Plus Development Environment
+- name: Main playbook for Debian Development Environment
   hosts: localhost
   become: false
   tasks:
     - name: Display welcome message
       debug:
         msg: |
-          Welcome to the Chromebook Plus Development Environment setup!
+          Welcome to the Debian Development Environment setup!
           This playbook will install and configure all the necessary packages and tools.
 
 - name: Include apt packages playbooks
@@ -23,18 +23,6 @@
 
 - name: Include Homebrew playbook
   import_playbook: homebrew/playbook.yml
-
-- name: Include Node.js playbook
-  import_playbook: node/playbook.yml
-
-- name: Include Python playbook
-  import_playbook: python/playbook.yml
-
-- name: Include Ruby playbook
-  import_playbook: ruby/playbook.yml
-
-- name: Include Rust playbook
-  import_playbook: rust/playbook.yml
 
 - name: Include OpenJDK playbook
   import_playbook: openjdk/playbook.yml
@@ -55,5 +43,5 @@
     - name: Display completion message
       debug:
         msg: |
-          Chromebook Plus Development Environment setup completed successfully!
+          Debian Development Environment setup completed successfully!
           Please restart your shell or run 'source ~/.zshrc' to apply all changes.

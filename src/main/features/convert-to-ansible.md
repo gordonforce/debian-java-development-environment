@@ -1,6 +1,6 @@
-# Convert installation scritps to ansible playbooks
+# Convert installation scripts to ansible playbooks
 ## Features
- - Install necessary packages and dependencies
+ - Install the necessary packages and dependencies
  - Configure system settings for development
  - Set up development tools and environments
  
@@ -20,5 +20,5 @@
     mkdir -p ~/code/chromebook-plus-development-environment
     cd ~/code/chromebook-plus-development-environment
     ```
- 3. Use the ansible inventory features to create a playbook for each package managed by homebrew and apt and save the playbook file(s) in a directory named after the package benath the project's root directory.
+ 3. Use the ansible inventory features to create a playbook for each package managed by homebrew and apt and save the playbook file(s) in a directory named after the package beneath the project's root directory.
  4. Do not include playbooks for transitive packages, only the top-level packages.

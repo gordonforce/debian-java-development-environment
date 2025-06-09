@@ -2,6 +2,7 @@
 - name: Install and configure Oh My Zsh
   hosts: localhost
   become: false
+  gather_facts: true
   tasks:
     - name: Check if Oh My Zsh is already installed
       stat:
@@ -21,13 +22,6 @@
         line: 'ZSH_THEME="robbyrussell"'
         state: present
       when: not oh_my_zsh_dir.stat.exists
-
-    - name: Ensure zsh is the default shell
-      user:
-        name: "{{ ansible_env.USER }}"
-        shell: /bin/zsh
-      become: true
-      when: ansible_facts['ansible_pkg_mgr'] == 'apt'
 
     - name: Display Oh My Zsh installation status
       debug:

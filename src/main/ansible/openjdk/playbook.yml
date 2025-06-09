@@ -25,7 +25,7 @@
         mode: '0755'
 
     - name: Add jenv initialization to .zshrc
-      line-infile:
+      lineinfile:
         path: "{{ ansible_env.HOME }}/.zshrc"
         line: 'export PATH="$HOME/.jenv/bin:$PATH"'
         state: present
@@ -39,7 +39,10 @@
         create: yes
 
     - name: Get Homebrew prefix
-      command: brew --prefix
+      shell : |
+        export PATH="{{ ansible_env.HOME}}/.jenv/:bin$PATH"
+        eval "$(jenv init -)"
+      command: "rehash; brew --prefix"
       register: brew_prefix
       changed_when: false
 
@@ -47,7 +50,7 @@
       shell: |
         export PATH="{{ ansible_env.HOME }}/.jenv/bin:$PATH"
         eval "$(jenv init -)"
-        jenv add "{{ brew_prefix.stdout }}/opt/openjdk@17"
+        jenv add "{{ brew_prefix.stdout }}/Cellar/openjdk@17/$(ls -atd | head -n 1)/libexec"
       args:
         executable: /bin/zsh
       register: jenv_add_17
