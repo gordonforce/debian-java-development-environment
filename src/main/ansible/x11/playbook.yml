@@ -30,3 +30,4 @@
     - name: Display X11 installation status
       debug:
         msg: "X11 packages are {{ 'successfully installed' if x11_installed.rc == 0 else 'not properly installed' }}."
+
