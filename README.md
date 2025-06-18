@@ -11,7 +11,7 @@ This repository contains the scripts and Ansible playbooks for setting up a Java
 
 ## By Feature
 * Operating Systems: 
-  * Debian 12 Bullseye - bare metal or virtual include Crostini
+  * Debian 12 Bookworm - bare metal or virtual include Crostini
     * Desktop: X11 based
     * Locale: en_US.UTF-8 - English in the United States using UTF-8 character encoding
     * Shell: Oh-My-Zsh
