@@ -1,34 +1,146 @@
-# Chromebook Plus Development Environment
+# Debian Java Development Environment
 
-This repository contains Ansible playbooks for setting up a complete development environment on a Chromebook Plus device with ChromeOS and Linux (Crostini) enabled.
+This repository contains the scripts and Ansible playbooks for setting up a Java development environment on a Chromebook Plus device with ChromeOS and Linux (Crostini) enabled.
 
-## Features
+# Tooling
 
-- Install necessary packages and dependencies
+## Versions
+* Install all tools using a package manager such as apt-get and homebrew, or an orchestration tool such as ansible.
+* Use the default (latest) version of a tool available from a package manager.
+* For tools where more than one major or minor versions are installed, such as Java or Maven, assume the latest patch version is installed. 
+
+## By Feature
+* Operating Systems: 
+  * Debian 12 Bookworm - bare metal or virtual include Crostini
+    * Desktop: X11 based
+    * Locale: en_US.UTF-8 - English in the United States using UTF-8 character encoding
+    * Shell: Oh-My-Zsh
+* Programming Languages: 
+  * Use the jenv utility to select which Java OpenJDK LTS version to use starting with Java 17. Java 21 is the default. 
+  * Zsh
+* Build System: maven using the mvnvm maven version virtualization utility with maven 3.9.10 as the default
+* Integrated Development Environment: The latest GA version of IntelliJ Ultimate installed by the jetbrains-toolbox application. 
+* Development and Security Operations (DevSecOps) Tools
+    * CI-CD: [GitHub Actions](https://github.com/features/actions)
+    * Encryption: gnupg
+    * Infrastructure as Code: ansible, apt-get, homebrew, and jetbrains-toolbox
+    * Secrets Vault: [pass](https://www.passwordstore.org/)
+    * Source Code Integrity: [signed commits using gpg](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
+    * Source Control: [Git](https://git-scm.com/)
+    * Source Code Quality: SonarQube IDE Plugin for IntelliJ Ultimate using defaults; hence it is not installed by this project, but its node dependency is.
+    * Source Code Test Coverage: Jacoco manged as a maven dependency; hence, it is not installed by this project
+    * Source Repositories: [GitHub](https://github.com)
+    * Virtualization: Docker containers for testing
+* Automation
+    * Formatted stream editors
+      * jq for JSON
+      * yq for YAML
+      * xq for XML
+    * Standalone Text editors
+      * vim for cli
+      * gvim for X11
+    * GitHub
+      * Git cli
+      * GitHub cli using gh
+    * Configuration Management
+      * ansible - configures applications managed by homebrew or apt-get 
+    * Package Managers
+      * homebrew - manages virtualized applications and system agnostic tools.
+      * jetbrains-toolbox - manages JetBrains IDE instances and versions.
+    * Tooling Support
+      * Node JS version 22 or higher. Required by the SonarQube IDE IntelliJ plugin.
+
+# Installation
+
+## Quick Start
+1. Download and execute the first installation script
+``` bash
+wget .....
+```
+2. Follow the instructions as displayed by the scripts to provide values, execute a script, and restart your terminal session. You will several prompts for each.
+
+## Phases
+
+Phases exist as installing a tool can require a change to the shell environment, and subsequent tool installations may need a recently installed tool and updated shell environment. A fresh terminal environment is the most reliable way to ensure a dependent tool and configuration are available after boot.
+
+# Implementation Requirements
+
+## Configuration Management and Package Management
+1. Use ansible to install and configure tools and have ansible use a package manager to manage the tool installation lifecycle where possible.
+2. Use a bootstrap bash script that installs git and ansible using apt-get. 
+3. Use apt-get for tools with only one version installed where tight operating system integration is desired, and the installation of ansible.
+4. Use homebrew for tools where more than one version is installed or tight operating system integration is not required.
+5. Use jetbrains-toolbox to manage instances of JetBrains IDEs. There is no automation available for this package manager.
+
+
+## Phases
+
+### Bootstrap
+
+Configuration Manager: none
+
+Depends On: none
+
+Package Manager: apt-get
+
+Steps
+1. Using apt-get in an unattended manner, update and upgrade existing packages, and  install ansible, git, and zsh with default yes answers to all prompts 
+2. Clone the repository https://github.com/gordonforce/debian-java-development-environment from the $HOME directory using git
+3. Create a directory named $HOME/bin and copy all scripts from the $HOME/debian-java-development-environment/src/main/zsh directory to $HOME/bin
+
+Provides: .zshrc, ansible, git
+
+### Oh-My-Zsh
+
+Configuration Manager: Ansible
+
+Depends On: .zshrc
+
+Package Manager: none
+
+Steps
+1. Download from URL and run the default configuration
+
+Provides: oh-my-zsh
+
+### Homebrew
+
+Configuration Manager: Ansible
+
+Depends On: .zshrc and oh-my-zsh
+
+Steps
+1. Download from URL and run the default configuration
+
+Provides: brew
+
+#### Independent utilties
+
+Depends On: .zshrc, brew, ansible, apt-get
+
+#### Install
+## Installation Phases
+- Install the necessary packages and dependencies
 - Configure system settings for development
 - Set up development tools and environments
 
 ## Requirements
-
-- Chromebook Plus device with ChromeOS installed
-- Linux (Crostini) enabled
+- A debian base environment such as a Chromebook Plus device with the Linux development environment enabled
 - Internet connection for package installation
 - Ansible installed
 
 ## Installation
-
-1. Install Ansible on your Chromebook Plus device:
+1. Install Ansible on your Chromebook Plus device: 
    ```bash
-   sudo apt update
-   sudo apt install ansible
+   sudo apt-get update
+   sudo apt-get upgrade
+   sudo apt-get install -y ansible git git-gui jq node yq xq zsh
    ```
-
 2. Clone this repository:
    ```bash
-   git clone <repository-url>
-   cd chromebook-plus-development-environment
+   git clone https://github.com/gordonforce/debian-java-development-environment
+   cd debian-java-development-environment
    ```
-
 3. Run the main playbook:
    ```bash
    ansible-playbook main.yml
@@ -38,14 +150,11 @@ This repository contains Ansible playbooks for setting up a complete development
 
 The main playbook includes the following individual playbooks, which can also be run separately:
 
-- `git/playbook.yml`: Installs and configures Git
+- `git/playbook.yml`: Ensures git is installed, it will install if it already exists, and always resets the configuration
 - `gnupg/playbook.yml`: Installs and configures GnuPG for key management
 - `oh-my-zsh/playbook.yml`: Installs and configures Oh My Zsh
 - `homebrew/playbook.yml`: Installs and configures Homebrew
 - `node/playbook.yml`: Installs Node.js
-- `python/playbook.yml`: Installs Python
-- `ruby/playbook.yml`: Installs Ruby
-- `rust/playbook.yml`: Installs Rust
 - `openjdk/playbook.yml`: Installs OpenJDK and configures jenv
 - `maven/playbook.yml`: Installs and configures Maven with mvnvm
 - `gh/playbook.yml`: Installs and configures GitHub CLI
@@ -61,28 +170,22 @@ For example:
 ```bash
 ansible-playbook git/playbook.yml
 ```
-
 ## Post-Installation
 
 After running the playbooks, you should:
-
 1. Restart your shell or run `source ~/.zshrc` to apply all changes
 2. Authenticate GitHub CLI by running `gh auth login` if you haven't already
 3. Verify that all tools are working correctly
 
 ## Customization
-
 You can customize the playbooks to suit your needs by editing the YAML files. Each playbook is self-contained and can be modified independently.
 
 ## Troubleshooting
-
 If you encounter any issues:
-
 1. Check the Ansible output for error messages
 2. Verify that all prerequisites are met
 3. Try running the individual playbook that's causing the issue
 4. Check the system logs for more information
 
 ## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+The MIT License as described in this project's LICENSE file.
