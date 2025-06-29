@@ -1,23 +1,39 @@
-# Debian Java Development Environment
+# dev-env - a Java development environment hosted on Crostini, Debian, MacOS, or Ubuntu
 
-This repository contains the scripts and Ansible playbooks for setting up a Java development environment on a Chromebook Plus device with ChromeOS and Linux (Crostini) enabled.
+Provision and maintain a Java development environment using the latest version of Java with command line 
+development tools, encrypted secrets such as passwords, keys and API keys, plus signed commits, JetBrains Toolbox, and 
+Visual Studio Code. 
 
 # Tooling
 
 ## Versions
 * Install all tools using a package manager such as apt-get and homebrew, or an orchestration tool such as ansible.
 * Use the default (latest) version of a tool available from a package manager.
-* For tools where more than one major or minor versions are installed, such as Java or Maven, assume the latest patch version is installed. 
+* For tools where more than one major or minor versions are installed, such as Java or Maven, assume the latest patch version is installed.
 
 ## By Feature
 * Operating Systems: 
-  * Debian 12 Bullseye - bare metal or virtual include Crostini
-    * Desktop: X11 based
-    * Locale: en_US.UTF-8 - English in the United States using UTF-8 character encoding
-    * Shell: Oh-My-Zsh
+  * Crostini or Debian 12 Bookworm
+    * Environment: Bare metal or virtual. Crostini is always virtual.
+    * Desktop: XWayland over X11
+  * MacOS
+    * Environment: Bare metal. Virtual support would be nice for testing.
+    * Desktop: Native
+  * Ubuntu 22.04 LTS (Jammy Jellyfish)
+    * The same as Debian 12 except as noted below
+      * Desktop: Ubuntu default
+* User Configuration
+  * Locale ISO-XXXX code
+  * Timezone ISO-XXXX code
+  * Operating system username
+  * Operating system password 
+  * encryption ids
+* Shell
+  * Z Shell with Oh-My-Zsh default theme as the default shell
 * Programming Languages: 
-  * Use the jenv utility to select which Java OpenJDK LTS version to use starting with Java 17. Java 21 is the default. 
+  * Java - latest openjdk version 
   * Zsh
+
 * Build System: maven using the mvnvm maven version virtualization utility with maven 3.9.10 as the default
 * Integrated Development Environment: The latest GA version of IntelliJ Ultimate installed by the jetbrains-toolbox application. 
 * Development and Security Operations (DevSecOps) Tools
@@ -84,7 +100,7 @@ Depends On: none
 Package Manager: apt-get
 
 Steps
-1. Using apt-get in an unattended manner, update and upgrade existing packages, and  install ansible, git, and zsh with default yes answers to all prompts 
+1. Using apt-get in an unattended manner, update and upgrade existing packages, and install ansible, git, and zsh with default yes answers to all prompts 
 2. Clone the repository https://github.com/gordonforce/debian-java-development-environment from the $HOME directory using git
 3. Create a directory named $HOME/bin and copy all scripts from the $HOME/debian-java-development-environment/src/main/zsh directory to $HOME/bin
 
@@ -114,7 +130,7 @@ Steps
 
 Provides: brew
 
-#### Independent utilties
+#### Independent Utilities
 
 Depends On: .zshrc, brew, ansible, apt-get
 
@@ -134,7 +150,7 @@ Depends On: .zshrc, brew, ansible, apt-get
    ```bash
    sudo apt-get update
    sudo apt-get upgrade
-   sudo apt-get install -y ansible git git-gui jq node yq xq zsh
+   sudo apt-get install -y ansible git 
    ```
 2. Clone this repository:
    ```bash
@@ -189,3 +205,5 @@ If you encounter any issues:
 
 ## License
 The MIT License as described in this project's LICENSE file.
+
+mvn wrapper:wrapper -Dmaven=3.9.10

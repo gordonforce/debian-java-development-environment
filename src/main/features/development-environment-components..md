@@ -1,7 +1,9 @@
 # Development Environment Components
 
 ## Components
+
 ### Applications
+
 | name       | installation phase | why                                                                                                               |
 |------------|--------------------|-------------------------------------------------------------------------------------------------------------------|
 | ansible    | 1                  | manages installation of utilities with custom configurations                                                      |
@@ -24,11 +26,14 @@
 
 ### Git and GitHub CLI Configuration
 
-1. Check if the git utility exists on the zsh command line. If it does not, exit the installation with a corresponding error message.
-2. Configure the following git properties from these pass secrets. 
+1. Check if the git utility exists on the zsh command line. If it does not, exit the installation with a corresponding
+   error message.
+2. Configure the following git properties from these pass secrets.
 3. All properties listed in the table below must be configured.
-4. If a secret does not exist in pass, and the git property is not default eligible, then exit the installation with a corresponding error message.
-5. If a secret does not exist in pass, and the git property is default eligible, then use the default value for the git configuration property.
+4. If a secret does not exist in pass, and the git property is not default eligible, then exit the installation with a
+   corresponding error message.
+5. If a secret does not exist in pass, and the git property is default eligible, then use the default value for the git
+   configuration property.
 
 | Git Configuration Property | Pass Secret Name   | Default Eligible | Default Value |
 |----------------------------|--------------------|------------------|---------------|
@@ -40,27 +45,37 @@
 | init.defaultBranch         | GIT_DEFAULT_BRANCH | yes              | main          |
 | color.ui                   | GIT_COLOR_UI       | yes              | auto          |
 
-6. Add the exportable GH_ENTERPRISE_TOKEN environment variable to the .zprofile file with its value set to "$(pass GITHUB_ENTERPRISE_TOKEN)"
+6. Add the exportable GH_ENTERPRISE_TOKEN environment variable to the .zprofile file with its value set to "$(pass
+   GITHUB_ENTERPRISE_TOKEN)"
 
 ### The language and encoding for this environment to United States English using the UTF-8 encoding
-Add the bash snippet below to the end of the ~/.zshenv file if it is not already defined. 
+
+Add the bash snippet below to the end of the ~/.zshenv file if it is not already defined.
+
 ```bash
 export LANG=en_US.UTF-8 
 ```
 
 ### Set the command line editor to vi
+
 add the bash snippet below to the end of the ~/.zshrc file if it is not already defined.
+
 ```bash
 set -o vi
 ```
 
 ### A default optioned ls command named lsd
+
 Add the bash snippet below to the end of the ~/.zshrc file if it is not already defined.
+
 ```bash
 alias lsd="ls -latsdh"
 ```
+
 ### Upgrade both APT and Homebrew managed packages
+
 Add the bash snippet below to the end of the ~/.zshrc file if it si not already defined.
+
 ```bash
 alias upgrade="sudo apt-get -y update; sudo apt-get -y upgrade; brew upgrade"
 ```
@@ -68,24 +83,32 @@ alias upgrade="sudo apt-get -y update; sudo apt-get -y upgrade; brew upgrade"
 ### Installation Scripts By Phase
 
 #### phase 1, src/main/zsh/install-dev-env-phase-1.zsh
+
 1. Update existing system applications using apt-get and responds yes to all prompts
 2. Upgrade existing system applications using apt-get and responds yes to all prompts
 3. Install all installation phase 1 applications using the apt-get and responds yes to all prompts
-4. Print a message to the user to exit their shell, restart the debian environment, and then run the src/main/zsh/install-dev-env-phase-2.zsh script.
+4. Print a message to the user to exit their shell, restart the debian environment, and then run the
+   src/main/zsh/install-dev-env-phase-2.zsh script.
 
 ### phase 2, src/main/zsh/install-dev-env-phase-2.zsh
+
 1. Install the homebrew package using the ansible playbook src/main/ansible/homebrew.yml
-2. Create a file named pass-secrets.properties that contains all pass secrets mentioned in this markdoqq1wn file on their own line and followed by an equals sign on each line.
-3. Print a message to the user to add the secret values to the pass-secrets.properties file; and then exit the shell, restart the debian environment, and execute script install-dev-env-phase-1.zsh
+2. Create a file named pass-secrets.properties that contains all pass secrets mentioned in this markdoqq1wn file on
+   their own line and followed by an equals sign on each line.
+3. Print a message to the user to add the secret values to the pass-secrets.properties file; and then exit the shell,
+   restart the debian environment, and execute script install-dev-env-phase-1.zsh
 
 ### phase 3, src/main/zsh/install-dev-env-phase-3.zsh
+
 1. Install the installation phase 3 applications using ansible
 2. Set the secrets and their values from the ~/pass-secrets.properties in pass
 3. Push all pass changes to GitHub
 4. Delete the ~/pass-secrets.properties file.
 5. Using ansible, set the Git and GitHub CLI configuration using the associated values stored in pass
-6. Print a message to the user to exit this shell, restart the debian environment, and then run script src/main/zsh/install-dev-env-stage-5.zsh
+6. Print a message to the user to exit this shell, restart the debian environment, and then run script
+   src/main/zsh/install-dev-env-stage-5.zsh
 
 ### phase 5, src/main/zsh/install-dev-env-phase-5.zsh
+
 1. Install the installation phase 5 applications using ansible
 2. 

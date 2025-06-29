@@ -39,7 +39,7 @@
         create: yes
 
     - name: Get Homebrew prefix
-      shell : |
+      shell: |
         export PATH="{{ ansible_env.HOME}}/.jenv/:bin$PATH"
         eval "$(jenv init -)"
       command: "rehash; brew --prefix"
