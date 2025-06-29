@@ -11,7 +11,7 @@ This repository contains the scripts and Ansible playbooks for setting up a Java
 
 ## By Feature
 * Operating Systems: 
-  * Debian 12 Bookworm - bare metal or virtual include Crostini
+  * Debian 12 Bullseye - bare metal or virtual include Crostini
     * Desktop: X11 based
     * Locale: en_US.UTF-8 - English in the United States using UTF-8 character encoding
     * Shell: Oh-My-Zsh
@@ -48,7 +48,7 @@ This repository contains the scripts and Ansible playbooks for setting up a Java
       * homebrew - manages virtualized applications and system agnostic tools.
       * jetbrains-toolbox - manages JetBrains IDE instances and versions.
     * Tooling Support
-      * Node JS version 22 or higher. Required by the SonarQube IDE IntelliJ plugin.
+      * Node.js version 22 or higher. Required by the SonarQube IDE IntelliJ plugin.
 
 # Installation
 
@@ -61,7 +61,7 @@ wget .....
 
 ## Phases
 
-Phases exist as installing a tool can require a change to the shell environment, and subsequent tool installations may need a recently installed tool and updated shell environment. A fresh terminal environment is the most reliable way to ensure a dependent tool and configuration are available after boot.
+Phases exist as installing a tool can require a change to the shell environment, and later tool installations may need a recently installed tool and updated shell environment. A fresh terminal environment is the most reliable way to ensure a dependent tool and configuration are available after boot.
 
 # Implementation Requirements
 

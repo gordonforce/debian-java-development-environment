@@ -9,5 +9,8 @@
         <module name="debian-java-development-environment" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="debian-java-development-environment" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
