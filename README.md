@@ -52,22 +52,21 @@
 
 #### Maintenance Lifecycle
 
-*
-* Attended and unattended installations
-* Recreate this environment with only knowing
-* The URL for this repository
-* Your secrets' encryption key
-* Your VCS credentials
-* A suitable virtual or bare metal system operating system
+  * Attended and unattended installations
+  * Recreate this environment with only knowing
+  * The URL for this repository
+  * Your secrets' encryption key
+  * Your VCS credentials
+  * A suitable virtual or bare metal system operating system with 32 GB of disk storage
 
 # Implementation
 
 ## Guidelines
 
-* Use package managers, and configuration orchestrators to automate the installation and maintenance
+* Use package managers and configuration orchestrators to automate the installation and maintenance
   of this environment.
 * Use the hosts's default system package manager for tools tightly coupled with operating system
-  such as configuration orchestration, encryption, version control and secrets management.
+  such as configuration orchestration, encryption, version control, and secrets management.
 * Use a third party package manager for development tools such as JDKs, stream editors, for
   consistency between platforms.
 * Use IDE configuration automation tools to configure plugins and other IDE settings.
@@ -159,16 +158,15 @@
 
 #### Secrets Management
 
-  * Use the open source password manager pass to encrypted secrets
+  * Use the open source password manager [pass](https://www.passwordstore.org/) to encrypt and store secrets
   * Store the encrypted passwords in the cloud using a private GitHub repository.
-  * Git integrates with pass for credential management. 
-  * Use the `pass show` command when setting environment variables to avoid keep secrets as plain
-  text.
+  * [Git integrates with pass for credential management](https://github.com/languitar/pass-git-helper). 
+  * Use the `pass show` command to avoid storing plain text secrets in version control.
 
 #### Encrypted External Communications
 
-  * Use SSH when interacting with GitHub using the Git CLI
-  * Use gh to manage GitHub repositories and workflows. GH encrypts all traffic exchanged with GitHub.
+  * [Use SSH when interacting with GitHub using the Git CLI.](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
+  * Manage GitHub repositories and workflows with [gh](https://cli.github.com/). GH encrypts all traffic exchanged with GitHub.
 
 #### Automation
 
@@ -219,6 +217,81 @@
     * Your VCS credentials
     * A suitable virtual or bare metal system operating system
 
+## Provisioning and Maintenance
+
+### Phases
+
+#### Overview
+* Provision configuration orchestration
+* Provision ZSH as the default shell
+* Provision package managers
+* Provision secrets management
+* Configure Java Development Tools
+
+##### Provision Configuration Management
+
+Install ansible and git cli
+
+###### Dependencies
+Ansible
+Git CLI
+
+###### Configuration
+Installation defaults
+
+##### Provision Z Shell
+
+Install and configure Z Shell
+
+###### Dependencies
+  * Phase: Provision Configuration Management
+  * Zsh 
+  * Oh-My-Zsh
+
+###### Configuration
+No additional configuration
+
+
+#### Provision Configuration Management
+
+##### Dependencies
+ * Phase: Provision Z Shell
+ * Homebrew
+
+##### Configuration
+ * Clone this project to $HOME/.local/dev-env/ using GitHub credentials for Git CLI
+
+#### Dependencies
+
+##### Git CLI
+
+###### Installation
+
+| OS         | Config Manager | Package Manager | Package Name | Version |
+|------------|----------------|-----------------|--------------|--------|
+| Crostini   | None           | apt-get         | git          | latest |
+| Debian     | None           | apt-get         | git          | latest |
+| MacOS      | None           | brew            | git          | latest |
+| Ubuntu     | None           | apt-get         | git          | latest |
+
+###### Configuration
+* Installation defaults
+
+##### Ansible
+
+###### Installation
+
+| OS         | Config Manager | Package Manager | Package Name | Version |
+|------------|----------------|-----------------|--------------|--------|
+| Crostini   | None           | apt-get         | ansible      | latest |
+| Debian     | None           | apt-get         | ansible      | latest |
+| MacOS      | None           | brew            | ansible      | latest |
+| Ubuntu     | None           | apt-get         | ansible      | latest |
+
+###### Configuration
+* Installation defaults
+
+
 ## Development Tools
 
 ## By Feature
@@ -231,7 +304,7 @@
   * CI-CD: [GitHub Actions](https://github.com/features/actions)
   * Encryption: gnupg
   * Infrastructure as Code: ansible, apt-get, homebrew, and jetbrains-toolbox
-  * Secrets Vault: [pass](https://www.passwordstore.org/)
+  * Secrets Vault:
   * Source Code
     Integrity: [signed commits using gpg](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
   * Source Control: [Git](https://git-scm.com/)
