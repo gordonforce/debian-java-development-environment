@@ -263,41 +263,14 @@ No additional configuration
 
 #### Dependencies
 
-##### Git CLI
-
-###### Installation
-
-| OS         | Config Manager | Package Manager | Package Name | Version |
-|------------|----------------|-----------------|--------------|--------|
-| Crostini   | None           | apt-get         | git          | latest |
-| Debian     | None           | apt-get         | git          | latest |
-| MacOS      | None           | brew            | git          | latest |
-| Ubuntu     | None           | apt-get         | git          | latest |
-
-###### Configuration
-* Installation defaults
-
-##### Ansible
-
-###### Installation
-
-| OS         | Config Manager | Package Manager | Package Name | Version |
-|------------|----------------|-----------------|--------------|--------|
-| Crostini   | None           | apt-get         | ansible      | latest |
-| Debian     | None           | apt-get         | ansible      | latest |
-| MacOS      | None           | brew            | ansible      | latest |
-| Ubuntu     | None           | apt-get         | ansible      | latest |
-
-###### Configuration
-* Installation defaults
 
 
 ## Development Tools
 
 ## By Feature
 
-* Build System: maven using the mvnvm maven version virtualization utility with maven 3.9.10 as the
-  default
+* Build System: Maven using the mvnvm maven version virtualization utility with maven 3.9.10 as the
+  default. Use the Maven wrapper in projects to set the version to use including the default.
 * Integrated Development Environment: The latest GA version of IntelliJ Ultimate installed by the
   jetbrains-toolbox application.
 * Development and Security Operations (DevSecOps) Tools
