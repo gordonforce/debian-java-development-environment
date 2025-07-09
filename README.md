@@ -5,10 +5,9 @@
 ## Programing Languages
 
 * The latest Java LTS version or greater.
-* The latest Z shell version.
+* The latest Z shell version as the default shell with command line completion and color terminal support.
+* Terminal CLI development environment.
 * Integrated Development Environments.
-* A Z shell terminal with command line completion and color terminal support.
-* Stream editing tools for popular configuration and data exchange formats.
 * A text editor
 
 ## Development and Security Operations (DevSecOps)
@@ -26,7 +25,7 @@
 
 ### Security
 
-* No plain text secrets in configuration files or version control.
+* No plain-text secrets in configuration files or version control.
 * All secrets are encrypted at rest.
 * Cloud storage for encrypted secrets.
 
@@ -102,17 +101,27 @@
 
 #### Java
 
-* Preferred: Install a single version by default as it can support the latest LTS version.
+* Preferred: Install a single version by default to simplify configuration as it can support the latest LTS version.
 * Install the javadoc for the above version as well.
-* Use jenv to manage specific versions of Java other than the latest GA version.
+* Use jenv to manage Java versions other than the latest GA version.
 
 #### Z Shell
 
 * Installed as the default shell.
-* Oh-my-zsh for command line completion and color theme management
-* These zsh aliases
-  * lsd: ls -lathd
-  * upgrade: sudo apt-get upgrade; brew upgrade
+* Text Mode Command Line Applications
+  * Include these applications on the PATH for interactive and non-interactive shell sessions.
+  * Include shell aliases that reference only text-mode command-line applications in interactive and non-interactive shell sessions.
+  * Include these shell aliases in all interactive sessions
+    * lsd: ls -lathd
+    * upgrade: sudo apt-get upgrade
+  * Use Oh-My-Zsh for command line completion and color theme management in interactive sessions.
+* Graphics Mode Applications
+  * Include all applictions and aliases for interactive text-mode command line applications.
+  * Include graphics-mode applications on the PATH for interactive shell sessions on a graphics-capable host. 
+  * Include shell aliases that reference any graphics-mode applications in an interactive shell sessions.
+
+* Put 
+
 
 #### Integrated Development Environments
 
@@ -124,8 +133,9 @@
 
 ##### Text Editors
 
-* vim for text based terminals
-* gvim for GUIs
+* vim for cli terminals on all platforms
+* gvim for GUI on Debian-based systems.
+* macVim for GUI on macos. 
 
 ##### Stream editing tools
 
@@ -217,16 +227,96 @@
     * Your VCS credentials
     * A suitable virtual or bare metal system operating system
 
-## Provisioning and Maintenance
+## Installation 
 
-### Phases
+### Steps
+Installation requires several steps. 
 
-#### Overview
-* Provision configuration orchestration
-* Provision ZSH as the default shell
-* Provision package managers
-* Provision secrets management
-* Configure Java Development Tools
+#### Install configuration orchestration
+
+Download this script and execute it in your home directory to install Ansible for configuration 
+orchtestration, and the ansible scripts to complete installation.
+
+```bash
+sudo apt-get install -y wget
+wget ``
+chmod a+x install-configuration-management.zsh
+./install-configuration-management.zsh
+```
+
+### Configure the Command Shell
+
+Configure zsh so packages installed by brew and apt-get update zsh configuration files.
+
+`configure-shell.zsh`
+
+### Configure package managers
+`configure-package-managers.zsh`
+
+### Secrets Management
+
+#### First Time: Create Secrets
+
+Have the following information ready
+
+##### Identity and Location
+
+| Field                    | Mandatory | Key in Pass                       | Value If Exists                                                                                                                                                   | Default Value          | Purpose                                                         |
+|--------------------------|-----------|-----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|-----------------------------------------------------------------|
+| Email Address            | yes       | personal/email-address            | N/A                                                                                                                                                               | N/A                    | How others should contact you.                                  |
+| GPG Encryption Key       | yes       | personal/gpg/public-key           | N/A                                                                                                                                                               | N/A                    | Your default GPG key                                            |
+| Full Name                | yes       | personal/name/full                | `"$(pass show personal/name/first) $(pass show personal/name/last)"`                                                                                              | N/A                    | How others should address formally.                             |
+| Given Name               | yes       | personal/name/given               | N/A                                                                                                                                                               | N/A                    | What others should  se as your formal first name.               |
+| Last Name                | no        | personal/name/last                | N/A                                                                                                                                                               |                        |                                                                 |
+| Nickname                 | yes       | personal/name/nick                | N/A                                                                                                                                                               |                        |                                                                 |
+| Username                 | yes       | personal/name/user                | `echo $LOGNAME`                                                                                                                                                   |                        |                                                                 |
+| Language                 | yes       | personal/language/name            | N/A                                                                                                                                                               | English                | What language do you develop in?                                |
+| Language Code Standard   | yes       | personal/language/standard        | N/A                                                                                                                                                               | ISO 639-1              |                                                                 |
+| Language Code            | yes       | personal/language/code            | `echo $LANG \| sed 's/^([a-z]{2})_/$1/'`                                                                                                                          | en                     |                                                                 |
+| Language File Encoding   | yes       | personal/language/file-encoding   | `echo $LANG \| sed 's/\.([A-Z][A-Z0-9\-]+)/$1/'`                                                                                                                  | UTF-8                  |                                                                 |
+| Country                  | yes       | personal/country/name             | N/A                                                                                                                                                               | United States          | United States                                                   | 
+| Country Code Standard    | yes       | personal/country/standard         | N/A                                                                                                                                                               | ISO 3166-1             |                                                                 |
+| Country Code             | yes       | personal/country/code             | echo $LANG \| `sed 's/[a-z]{2}_([A-Z]{2})/$1/'`                                                                                                                   | US                     |                                                                 |
+| Timezone                 | yes       | personal/timezone/name            | N/A                                                                                                                                                               | Pacific                |                                                                 |
+| Timezone Code Standard   | yes       | personal/timezone/standard        | If `pass show personal/timezone/code` exists, set to IANA Timezone Database, other prompt user with the default value.                                            | IANA Timezone Database |                                                                 |
+| Timezone Code            | yes       | personal/timezone/code            | `echo $TZ`                                                                                                                                                          | America/Los_Angeles    | When others should expect a response to their request.          |
+| SSH Directory            | no        | personal/ssh/config-directory     | $HOME/.ssh if the directory exists                                                                                                                                | $HOME/.ssh             | The file system location of your SSH files                      |
+| SSH Known Hosts          | no        | personal/ssh/known-hosts/content  | The contents of $HOME/.ssh/known_hosts                                                                                                                            | N/A                    |                                                                 |
+| SSH Known Hosts Update   | no        | personal/ssh/known-hosts/update   | N/A                                                                                                                                                               | yes                    | Should dev-env keep your known SSH hosts list between instances |
+| SSH Private Key Filename | no        | personal/ssh/private-key/filename | If `pass show personal/ssh/config-directory` directory exists and contains one file with an SSH private key, use the filename for this value, or prompt the user. | N/A                    |                                                                 |
+| SSH Private Key Value    | no        | personal/ssh/private-key/content  | N/A                                                                                                                                                               | N/A                    | Your default SSH private key for encrypted remote sessions.     |
+| SSH Public Key Filename  | no        | personal/ssh/public-key/filename  | If `pass show personal/ssh/config-directory` directory exists and contains one file with an SSH public key , use the filename for this value, or prompt the user. | N/A                    |                                                                 |
+| SSH Public Key Value     | no        | personal/ssh/public-key/content   | If `pass show personal/ssh/public-key-file-path` exists, use the contents of this file if its key foramt is valid, or prompt the user for a value.                | N/A                    | Your default SSH public key for encrypted remote sessions.      | 
+
+##### Git CLI Configuration
+                                                                                                                                
+| Field                        | Mandatory | Git Config Name    | Key in Pass                     | Value if Exists                                             | Default Value | Purpose                                                  |
+|------------------------------|-----------|--------------------|---------------------------------|-------------------------------------------------------------|---------------|----------------------------------------------------------|
+| Email Address                | yes       | user.email         | git/config/email-address        | `pass show personal/email-address`                          | N/A           | The email address to associate with your Git operations  |
+| Full Name                    | yes       | user.name          | git/config/full-name            | `pass show personal/name/full`                              | N/A           | The name to associate with you Git operations            |
+| GPG Commit Signing Key       | no        | user.signingkey    | git/config/commit-signing-key   | `pass show personal/gpg/public-key`                         | N/A           |                                                          |
+| Sign GPG Commits             | yes       | commit.gpgsign     | git/config/sign-commits         | true if `pass list personal/gpg-key` exists otherwise false | N/A           |                                                          |
+| Pull Request Rebase Strategy | yes       | pull.rebase        | git/config/pull-rebase-strategy | N/A                                                         | local         |                                                          |
+| Push Strategy                | yes       | push.default       | git/config/push-strategy        | N/A                                                         | simple        |                                                          |
+| Default Branch               | yes       | init.defaultbranch | git/config/default-branch       | N/A                                                         | main          |                                                          |
+| Use Colorized UI Text        | yes       | color.ui           | git/config/color-ui             | N/A                                                         | auto          |                                                          |
+| Editor                       | yes       | core.editor        | git/config/editor               | vim if vim is on the path, otherwise, prompt the user       | nano          |                                                          |
+| Text File Line Endings       | yes       | core.autocrlf      | git/config/line-endings         | N/A                                                         | input         |                                                          |
+
+##### GitHub Configuration
+
+| Field                   | Mandatory | GitHub Name | Key in Pass               | Value if Exists                                                                                        | Default Value | Purpose |
+|-------------------------|-----------|-------------|---------------------------|--------------------------------------------------------------------------------------------------------|---------------|---------|
+| Username                | yes       | owner       | github/owner              | `pass show personal/name/user`                                                                         | N/A           |         |
+| API Token               | yes       | ?           | github/api-token          | `echo $GH_ENTERPRISE_TOKEN`                                                                            | N/A           |         |
+| Public Owner GitHub URL | yes       | ?           | github/owner-url          | `https:/github.com/$(pass show github/owner)` if an HTTP GET request returns a 200 including redirects | N/A           |         |
+| Commit Signing Key      | no        | ?           | github/commit-signing-key | `pass show git/commit-signing-key`                                                                     | N/A           |         |
+| SSH Public Key          | no        | ?           | github/ssh-public-key     | `pass show personal/ssh/public-key`                                                                    | N/A           |         |
+| Git CLI Remote Username | yes       | ?           | git/remote/username       | `pass show github/owner`                                                                               | N/A           |         |
+| Git CLI Remote Password | yes       | ?           | git/remote/password       | `pass show github/api-key`                                                                             |               |         |
+
+### Install Development Tools 
+`install-dev-tools.zsh`
 
 ##### Provision Configuration Management
 
@@ -270,7 +360,7 @@ No additional configuration
 ## By Feature
 
 * Build System: Maven using the mvnvm maven version virtualization utility with maven 3.9.10 as the
-  default. Use the Maven wrapper in projects to set the version to use including the default.
+  default. Use the Maven wrapper in projects to set the maven version to one installed. 
 * Integrated Development Environment: The latest GA version of IntelliJ Ultimate installed by the
   jetbrains-toolbox application.
 * Development and Security Operations (DevSecOps) Tools
@@ -287,7 +377,6 @@ No additional configuration
     this project
   * Source Repositories: [GitHub](https://github.com)
   * Virtualization: Docker containers for testing
-
 
 # Installation
 
