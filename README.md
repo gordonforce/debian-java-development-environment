@@ -34,7 +34,7 @@
 #### Continuous Integration and Deployment (CI-CD)
 
 * Build with all code quality checks
-* Cloud based
+* Cloud-based
 
 #### Code Quality
 
@@ -51,26 +51,32 @@
 
 #### Maintenance Lifecycle
 
+  * One-time encrypted secrets repository creation.
   * Attended and unattended installations
   * Recreate this environment with only knowing
-  * The URL for this repository
-  * Your secrets' encryption key
-  * Your VCS credentials
-  * A suitable virtual or bare metal system operating system with 32 GB of disk storage
+    * The URL for this repository.
+    * The URL for your encrypted secrets repository.
+    * Your secrets' encryption key.
+    * Your VCS credentials.
+    * The installation-target as a virtual or bare metal system operating system with 32 GB of storage.
 
 # Implementation
+
+## Usage
+
+Use this develop environment towards a targeted goal, e.g., build
 
 ## Guidelines
 
 * Use package managers and configuration orchestrators to automate the installation and maintenance
   of this environment.
-* Use the hosts's default system package manager for tools tightly coupled with operating system
-  such as configuration orchestration, encryption, version control, and secrets management.
-* Use a third party package manager for development tools such as JDKs, stream editors, for
+* Use the host's default system package manager for tools tightly coupled with an operating system
+  such as configuration orchestration, encryption, version control, and managing secrets.
+* Employ a cross-platform package-manager to install and update development tools such as JDKs, stream editors, for
   consistency between platforms.
 * Use IDE configuration automation tools to configure plugins and other IDE settings.
 * Implementing a feature may require components from more than one package manager.
-* The build system may provide code quality and other automation artifacts.
+* The build system provides many code quality and other automation artifacts.
 * Always use the latest GA version of a utility by default.
 
 ## Solution
@@ -99,10 +105,8 @@
 
 ### Programing Languages
 
-#### Java
-
-* Preferred: Install a single version by default to simplify configuration as it can support the latest LTS version.
-* Install the javadoc for the above version as well.
+* Install the latest JDK GA version, as it supports the latest LTS Java version through the Java Compiler's source, target and release properties.
+* Install the Javadoc for the above version as well.
 * Use jenv to manage Java versions other than the latest GA version.
 
 #### Z Shell
@@ -118,7 +122,7 @@
 * Graphics Mode Applications
   * Include all applictions and aliases for interactive text-mode command line applications.
   * Include graphics-mode applications on the PATH for interactive shell sessions on a graphics-capable host. 
-  * Include shell aliases that reference any graphics-mode applications in an interactive shell sessions.
+  * Include shell aliases that reference any graphics-mode applications in an interactive shell session.
 
 * Put 
 
@@ -168,7 +172,7 @@
 
 #### Secrets Management
 
-  * Use the open source password manager [pass](https://www.passwordstore.org/) to encrypt and store secrets
+  * Use the open source password manager [pass](https://www.passwordstore.org/) to encrypt and store secrets.
   * Store the encrypted passwords in the cloud using a private GitHub repository.
   * [Git integrates with pass for credential management](https://github.com/languitar/pass-git-helper). 
   * Use the `pass show` command to avoid storing plain text secrets in version control.
@@ -186,7 +190,7 @@
   * Supports maven and gradle build tools
   * Use the maven wrapper when setting the maven version for a project.
   * Use the mvnvm utility to set the default maven version for new maven wrapper configurations.
-  * Use the gradle wrapper when setting the gradle version for a project.
+  * Use the Gradle wrapper when setting the Gradle version for a project.
 
 ##### Code Quality
 
@@ -246,7 +250,7 @@ chmod a+x install-configuration-management.zsh
 
 ### Configure the Command Shell
 
-Configure zsh so packages installed by brew and apt-get update zsh configuration files.
+Configure Zsh as the default shell, so that packages installed by Homebrew and apt-get update zsh configuration files.
 
 `configure-shell.zsh`
 
@@ -350,7 +354,7 @@ No additional configuration
  * Homebrew
 
 ##### Configuration
- * Clone this project to $HOME/.local/dev-env/ using GitHub credentials for Git CLI
+ * Clone this project to $HOME/.local/dev-env/ using GitHub credentials for Git CLI.
 
 #### Dependencies
 
@@ -375,7 +379,7 @@ No additional configuration
   * Source Code Quality: SonarQube IDE Plugin for IntelliJ Ultimate using defaults; hence it is not
     installed by this project, but its node dependency is.
   * Source Code Test Coverage: Jacoco manged as a maven dependency; hence, it is not installed by
-    this project
+    this project.
   * Source Repositories: [GitHub](https://github.com)
   * Virtualization: Docker containers for testing
 
@@ -426,11 +430,11 @@ Package Manager: apt-get
 Steps
 
 1. Using apt-get in an unattended manner, update and upgrade existing packages, and install ansible,
-   git, and zsh with default yes answers to all prompts
+   git, and zsh with default yes answers to all prompts.
 2. Clone the repository https://github.com/gordonforce/debian-java-development-environment from
    the $HOME directory using git
 3. Create a directory named $HOME/bin and copy all scripts from the $
-   HOME/debian-java-development-environment/src/main/zsh directory to $HOME/bin
+   HOME/debian-java-development-environment/src/main/zsh directory to $HOME/bin.
 
 Provides: .zshrc, ansible, git
 
@@ -475,7 +479,7 @@ Depends On: .zshrc, brew, ansible, apt-get
 ## Requirements
 
 - A debian base environment such as a Chromebook Plus device with the Linux development environment
-  enabled
+  enabled.
 - Internet connection for package installation
 - Ansible installed
 
@@ -502,7 +506,7 @@ Depends On: .zshrc, brew, ansible, apt-get
 The main playbook includes the following individual playbooks, which can also be run separately:
 
 - `git/playbook.yml`: Ensures git is installed, it will install if it already exists, and always
-  resets the configuration
+  resets the configuration.
 - `gnupg/playbook.yml`: Installs and configures GnuPG for key management
 - `oh-my-zsh/playbook.yml`: Installs and configures Oh My Zsh
 - `homebrew/playbook.yml`: Installs and configures Homebrew
@@ -549,6 +553,4 @@ If you encounter any issues:
 
 ## License
 
-The MIT License as described in this project's LICENSE file.
-
-mvn wrapper:wrapper -Dmaven=3.9.10
+The MIT License as described in the LICENSE file.
