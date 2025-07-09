@@ -238,7 +238,7 @@ Download this script and execute it in your home directory to install Ansible fo
 orchtestration, and the ansible scripts to complete installation.
 
 ```bash
-sudo apt-get install -y wget
+sudo apt-get install -y wget vim
 wget ``
 chmod a+x install-configuration-management.zsh
 ./install-configuration-management.zsh
@@ -267,7 +267,7 @@ Have the following information ready
 | GPG Encryption Key       | yes       | personal/gpg/public-key           | N/A                                                                                                                                                               | N/A                    | Your default GPG key                                            |
 | Full Name                | yes       | personal/name/full                | `"$(pass show personal/name/first) $(pass show personal/name/last)"`                                                                                              | N/A                    | How others should address formally.                             |
 | Given Name               | yes       | personal/name/given               | N/A                                                                                                                                                               | N/A                    | What others should  se as your formal first name.               |
-| Last Name                | no        | personal/name/last                | N/A                                                                                                                                                               |                        |                                                                 |
+| Last Name                | yes       | personal/name/last                | N/A                                                                                                                                                               |                        |                                                                 |
 | Nickname                 | yes       | personal/name/nick                | N/A                                                                                                                                                               |                        |                                                                 |
 | Username                 | yes       | personal/name/user                | `echo $LOGNAME`                                                                                                                                                   |                        |                                                                 |
 | Language                 | yes       | personal/language/name            | N/A                                                                                                                                                               | English                | What language do you develop in?                                |
@@ -279,7 +279,7 @@ Have the following information ready
 | Country Code             | yes       | personal/country/code             | echo $LANG \| `sed 's/[a-z]{2}_([A-Z]{2})/$1/'`                                                                                                                   | US                     |                                                                 |
 | Timezone                 | yes       | personal/timezone/name            | N/A                                                                                                                                                               | Pacific                |                                                                 |
 | Timezone Code Standard   | yes       | personal/timezone/standard        | If `pass show personal/timezone/code` exists, set to IANA Timezone Database, other prompt user with the default value.                                            | IANA Timezone Database |                                                                 |
-| Timezone Code            | yes       | personal/timezone/code            | `echo $TZ`                                                                                                                                                          | America/Los_Angeles    | When others should expect a response to their request.          |
+| Timezone Code            | yes       | personal/timezone/code            | `echo $TZ`                                                                                                                                                        | America/Los_Angeles    | When others should expect a response to their request.          |
 | SSH Directory            | no        | personal/ssh/config-directory     | $HOME/.ssh if the directory exists                                                                                                                                | $HOME/.ssh             | The file system location of your SSH files                      |
 | SSH Known Hosts          | no        | personal/ssh/known-hosts/content  | The contents of $HOME/.ssh/known_hosts                                                                                                                            | N/A                    |                                                                 |
 | SSH Known Hosts Update   | no        | personal/ssh/known-hosts/update   | N/A                                                                                                                                                               | yes                    | Should dev-env keep your known SSH hosts list between instances |
@@ -305,15 +305,16 @@ Have the following information ready
 
 ##### GitHub Configuration
 
-| Field                   | Mandatory | GitHub Name | Key in Pass               | Value if Exists                                                                                        | Default Value | Purpose |
-|-------------------------|-----------|-------------|---------------------------|--------------------------------------------------------------------------------------------------------|---------------|---------|
-| Username                | yes       | owner       | github/owner              | `pass show personal/name/user`                                                                         | N/A           |         |
-| API Token               | yes       | ?           | github/api-token          | `echo $GH_ENTERPRISE_TOKEN`                                                                            | N/A           |         |
-| Public Owner GitHub URL | yes       | ?           | github/owner-url          | `https:/github.com/$(pass show github/owner)` if an HTTP GET request returns a 200 including redirects | N/A           |         |
-| Commit Signing Key      | no        | ?           | github/commit-signing-key | `pass show git/commit-signing-key`                                                                     | N/A           |         |
-| SSH Public Key          | no        | ?           | github/ssh-public-key     | `pass show personal/ssh/public-key`                                                                    | N/A           |         |
-| Git CLI Remote Username | yes       | ?           | git/remote/username       | `pass show github/owner`                                                                               | N/A           |         |
-| Git CLI Remote Password | yes       | ?           | git/remote/password       | `pass show github/api-key`                                                                             |               |         |
+| Field                   | Mandatory | GitHub Name | Key in Pass                    | Value if Exists                                                                                        | Default Value | Purpose |
+|-------------------------|-----------|-------------|--------------------------------|--------------------------------------------------------------------------------------------------------|---------------|---------|
+| Username                | yes       | owner       | github/owner                   | `pass show personal/name/user`                                                                         | N/A           |         |
+| API Token               | yes       | ?           | github/api-token               | `echo $GH_ENTERPRISE_TOKEN`                                                                            | N/A           |         |
+| Public Owner GitHub URL | yes       | ?           | github/owner-url               | `https:/github.com/$(pass show github/owner)` if an HTTP GET request returns a 200 including redirects | N/A           |         |
+| Commit Signing Key      | no        | ?           | github/commit-signing-key      | `pass show git/commit-signing-key`                                                                     | N/A           |         |
+| SSH Public Key Filename | no        | ?           | github/ssh/public-key/filename | `pass show personal/ssh/public-key/filename`                                                           | N/A           |         |
+| SSH Public Key Value    | no        | ?           | github/ssh/public-key/content  | `pass show personal/ssh/public-key/content`                                                            | N/A           |         |
+| Git CLI Remote Username | yes       | ?           | git/remote/username            | `pass show github/owner`                                                                               | N/A           |         |
+| Git CLI Remote Password | yes       | ?           | git/remote/password            | `pass show github/api-key`                                                                             |               |         |
 
 ### Install Development Tools 
 `install-dev-tools.zsh`
