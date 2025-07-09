@@ -26,7 +26,7 @@
 ### Security
 
 * No plain-text secrets in configuration files or version control.
-* All secrets are encrypted at rest.
+* Encrypted secrets at rest.
 * Cloud storage for encrypted secrets.
 
 ### Automation
@@ -64,7 +64,18 @@
 
 ## Usage
 
-Use this develop environment towards a targeted goal, e.g., build
+A simple development environment uses one GitHub or GitHub Enterprise account, one set of SSH 
+keys for communication with remote services, and one set of GPG keys. You can create more than one 
+development environment VM to handle different configurations. 
+
+One can configure different SSH public key and private keys for each remote service as a 
+workaround for not using a common key pair. The same configuration option exists for GPG keys. 
+You can add these to the personal secrets store by adding a service name to the key definitions.
+For example, personal/ssh/public-key/github/content associates a public key for GitHub specifically 
+instead of using the default key.
+
+This environment does not support using more than one GitHub account. I will consider adding this 
+feature when requested.
 
 ## Guidelines
 
@@ -265,32 +276,32 @@ Have the following information ready
 
 ##### Identity and Location
 
-| Field                    | Mandatory | Key in Pass                       | Value If Exists                                                                                                                                                   | Default Value          | Purpose                                                         |
-|--------------------------|-----------|-----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|-----------------------------------------------------------------|
-| Email Address            | yes       | personal/email-address            | N/A                                                                                                                                                               | N/A                    | How others should contact you.                                  |
-| GPG Encryption Key       | yes       | personal/gpg/public-key           | N/A                                                                                                                                                               | N/A                    | Your default GPG key                                            |
-| Full Name                | yes       | personal/name/full                | `"$(pass show personal/name/first) $(pass show personal/name/last)"`                                                                                              | N/A                    | How others should address formally.                             |
-| Given Name               | yes       | personal/name/given               | N/A                                                                                                                                                               | N/A                    | What others should  se as your formal first name.               |
-| Last Name                | yes       | personal/name/last                | N/A                                                                                                                                                               |                        |                                                                 |
-| Nickname                 | yes       | personal/name/nick                | N/A                                                                                                                                                               |                        |                                                                 |
-| Username                 | yes       | personal/name/user                | `echo $LOGNAME`                                                                                                                                                   |                        |                                                                 |
-| Language                 | yes       | personal/language/name            | N/A                                                                                                                                                               | English                | What language do you develop in?                                |
-| Language Code Standard   | yes       | personal/language/standard        | N/A                                                                                                                                                               | ISO 639-1              |                                                                 |
-| Language Code            | yes       | personal/language/code            | `echo $LANG \| sed 's/^([a-z]{2})_/$1/'`                                                                                                                          | en                     |                                                                 |
-| Language File Encoding   | yes       | personal/language/file-encoding   | `echo $LANG \| sed 's/\.([A-Z][A-Z0-9\-]+)/$1/'`                                                                                                                  | UTF-8                  |                                                                 |
-| Country                  | yes       | personal/country/name             | N/A                                                                                                                                                               | United States          | United States                                                   | 
-| Country Code Standard    | yes       | personal/country/standard         | N/A                                                                                                                                                               | ISO 3166-1             |                                                                 |
-| Country Code             | yes       | personal/country/code             | echo $LANG \| `sed 's/[a-z]{2}_([A-Z]{2})/$1/'`                                                                                                                   | US                     |                                                                 |
-| Timezone                 | yes       | personal/timezone/name            | N/A                                                                                                                                                               | Pacific                |                                                                 |
-| Timezone Code Standard   | yes       | personal/timezone/standard        | If `pass show personal/timezone/code` exists, set to IANA Timezone Database, other prompt user with the default value.                                            | IANA Timezone Database |                                                                 |
-| Timezone Code            | yes       | personal/timezone/code            | `echo $TZ`                                                                                                                                                        | America/Los_Angeles    | When others should expect a response to their request.          |
-| SSH Directory            | no        | personal/ssh/config-directory     | $HOME/.ssh if the directory exists                                                                                                                                | $HOME/.ssh             | The file system location of your SSH files                      |
-| SSH Known Hosts          | no        | personal/ssh/known-hosts/content  | The contents of $HOME/.ssh/known_hosts                                                                                                                            | N/A                    |                                                                 |
-| SSH Known Hosts Update   | no        | personal/ssh/known-hosts/update   | N/A                                                                                                                                                               | yes                    | Should dev-env keep your known SSH hosts list between instances |
-| SSH Private Key Filename | no        | personal/ssh/private-key/filename | If `pass show personal/ssh/config-directory` directory exists and contains one file with an SSH private key, use the filename for this value, or prompt the user. | N/A                    |                                                                 |
-| SSH Private Key Value    | no        | personal/ssh/private-key/content  | N/A                                                                                                                                                               | N/A                    | Your default SSH private key for encrypted remote sessions.     |
-| SSH Public Key Filename  | no        | personal/ssh/public-key/filename  | If `pass show personal/ssh/config-directory` directory exists and contains one file with an SSH public key , use the filename for this value, or prompt the user. | N/A                    |                                                                 |
-| SSH Public Key Value     | no        | personal/ssh/public-key/content   | If `pass show personal/ssh/public-key-file-path` exists, use the contents of this file if its key foramt is valid, or prompt the user for a value.                | N/A                    | Your default SSH public key for encrypted remote sessions.      | 
+| Field                    | Mandatory | Key in Pass                               | Value If Exists                                                                                                                                                   | Default Value          | Purpose                                                         |
+|--------------------------|-----------|-------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|-----------------------------------------------------------------|
+| Email Address            | yes       | personal/email-address                    | N/A                                                                                                                                                               | N/A                    | How others should contact you.                                  |
+| GPG Encryption Key       | yes       | personal/gpg/default/public-key           | N/A                                                                                                                                                               | N/A                    | Your default GPG key                                            |
+| Full Name                | yes       | personal/name/full                        | `"$(pass show personal/name/first) $(pass show personal/name/last)"`                                                                                              | N/A                    | How others should address formally.                             |
+| Given Name               | yes       | personal/name/given                       | N/A                                                                                                                                                               | N/A                    | What others should  se as your formal first name.               |
+| Last Name                | yes       | personal/name/last                        | N/A                                                                                                                                                               |                        |                                                                 |
+| Nickname                 | yes       | personal/name/nick                        | N/A                                                                                                                                                               |                        |                                                                 |
+| Username                 | yes       | personal/name/user                        | `echo $LOGNAME`                                                                                                                                                   |                        |                                                                 |
+| Language                 | yes       | personal/language/name                    | N/A                                                                                                                                                               | English                | What language do you develop in?                                |
+| Language Code Standard   | yes       | personal/language/standard                | N/A                                                                                                                                                               | ISO 639-1              |                                                                 |
+| Language Code            | yes       | personal/language/code                    | `echo $LANG \| sed 's/^([a-z]{2})_/$1/'`                                                                                                                          | en                     |                                                                 |
+| Language File Encoding   | yes       | personal/language/file-encoding           | `echo $LANG \| sed 's/\.([A-Z][A-Z0-9\-]+)/$1/'`                                                                                                                  | UTF-8                  |                                                                 |
+| Country                  | yes       | personal/country/name                     | N/A                                                                                                                                                               | United States          | United States                                                   | 
+| Country Code Standard    | yes       | personal/country/standard                 | N/A                                                                                                                                                               | ISO 3166-1             |                                                                 |
+| Country Code             | yes       | personal/country/code                     | echo $LANG \| `sed 's/[a-z]{2}_([A-Z]{2})/$1/'`                                                                                                                   | US                     |                                                                 |
+| Timezone                 | yes       | personal/timezone/name                    | N/A                                                                                                                                                               | Pacific                |                                                                 |
+| Timezone Code Standard   | yes       | personal/timezone/standard                | If `pass show personal/timezone/code` exists, set to IANA Timezone Database, other prompt user with the default value.                                            | IANA Timezone Database |                                                                 |
+| Timezone Code            | yes       | personal/timezone/code                    | `echo $TZ`                                                                                                                                                        | America/Los_Angeles    | When others should expect a response to their request.          |
+| SSH Directory            | no        | personal/ssh/config-directory             | $HOME/.ssh if the directory exists                                                                                                                                | $HOME/.ssh             | The file system location of your SSH files                      |
+| SSH Known Hosts          | no        | personal/ssh/known-hosts/content          | The contents of $HOME/.ssh/known_hosts                                                                                                                            | N/A                    |                                                                 |
+| SSH Known Hosts Update   | no        | personal/ssh/known-hosts/default/update   | N/A                                                                                                                                                               | yes                    | Should dev-env keep your known SSH hosts list between instances |
+| SSH Private Key Filename | no        | personal/ssh/private-key/default/filename | If `pass show personal/ssh/config-directory` directory exists and contains one file with an SSH private key, use the filename for this value, or prompt the user. | N/A                    |                                                                 |
+| SSH Private Key Value    | no        | personal/ssh/private-key/default/content  | N/A                                                                                                                                                               | N/A                    | Your default SSH private key for encrypted remote sessions.     |
+| SSH Public Key Filename  | no        | personal/ssh/public-key/default/filename  | If `pass show personal/ssh/config-directory` directory exists and contains one file with an SSH public key , use the filename for this value, or prompt the user. | N/A                    |                                                                 |
+| SSH Public Key Value     | no        | personal/ssh/public-key/default/content   | If `pass show personal/ssh/public-key-file-path` exists, use the contents of this file if its key foramt is valid, or prompt the user for a value.                | N/A                    | Your default SSH public key for encrypted remote sessions.      | 
 
 ##### Git CLI Configuration
                                                                                                                                 
@@ -456,7 +467,7 @@ Provides: oh-my-zsh
 
 Configuration Manager: Ansible
 
-Depends On: .zshrc and oh-my-zsh
+Depends on zsh and oh-my-zsh
 
 Steps
 
