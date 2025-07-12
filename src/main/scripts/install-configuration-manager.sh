@@ -1,14 +1,22 @@
-#!/usr/bin/env zsh
+c#!/usr/bin/env zsh
 
-# Debian Java Development Environment Installation Script
-# This script implements the installation steps from the README.md file
 
-# Step 1: Update package lists and install Ansible, Git, and zsh
-sudo apt-get update
-sudo apt-get install -y ansible git zsh
+# If on macOS
+# Step 1: Install a minimal homebrew environment to install git and ansible
+# Get homebrew here
+brew install ansible git # install unattended by answering with default values to questions
+# or else
+sudo apt-get install -y ansible git  # install unattended by answering with default values to questions
 
 # Step 2: Clone the repository
 # Check if we're already in the repository directory
+mkdir -p $HOME/.dev-env
+cd $HOME/.dev-env
+
+if [[ ! -e "dev-env" ]]; then
+  git clone
+fi
+
 if [[ ! -d "debian-java-development-environment" && ! -f "src/main/ansible/main.yml" ]]; then
   git clone https://github.com/gordonforce/debian-java-development-environment
   cd debian-java-development-environment
