@@ -87,6 +87,19 @@
 ### Configuration
 1. Use the oh-my-zsh default theme
 
+## Applications At the Latest Version With Default Configuration Only
+
+| OS                       | Config Manager | Package Manager | Package Name | Version |
+|--------------------------|----------------|-----------------|--------------|---------|
+| Crostini, Debian, Ubuntu | ansible        | apt-get         | gcc          | latest  |
+| Crostini, Debian, Ubuntu | ansible        | apt-get         | glibc        | latest  |
+| Crostini, Debian, Ubuntu | ansible        | apt-get         | curl         | latest  |
+| Crostini, Debian, Ubuntu | ansible        | apt-get         | vim          | latest  |
+| macOS                    | ansible        | brew            | gcc          | latest  |
+| macOS                    | ansible        | brew            | glibc        | latest  |
+| macOS                    | ansible        | brew            | curl         | latest  |
+| macOS                    | ansible        | brew            | vim          | latest  |
+
 ## Homebrew
 
 ### Dependencies
@@ -95,5 +108,5 @@
 * Gcc
 * Glibc
 * Curl
-
+* Vim
 
