@@ -87,3 +87,13 @@
 ### Configuration
 1. Use the oh-my-zsh default theme
 
+## Homebrew
+
+### Dependencies
+* Ansible
+* Git
+* Gcc
+* Glibc
+* Curl
+
+

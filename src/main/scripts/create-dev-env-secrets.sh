@@ -23,7 +23,5 @@ fi
 
 cd "$HOME" || exit 3
 
-ansible -f "$DEV_ENV_LOCAL_PLAYBOOKS_REPO"/src/main/ansible/zsh/playbook.yaml
-ansible -f "$DEV_ENV_LOCAL_PLAYBOOKS_REPO"/src/main/ansible/oh-my-zsh/playbook.yaml
 ansible -f "$DEV_ENV_LOCAL_PLAYBOOKS_REPO"/src/main/ansible/homebrew/playbook.yaml
 ansible -f "$DEV_ENV_LOCAL_PLAYBOOKS_REPO"/src/main/ansible/secrets/playbook.yaml
