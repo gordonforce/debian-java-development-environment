@@ -1,13 +1,24 @@
-# Installation and Configuration Requirements
+# Installation and configuration requirements
+
+Instead of the details below, focus on general requirements and let agentic AI figure it out. Focus on the outcomes and than the details.
+
+
+
 
 # Phases 
 
 ## Provision configuration orchestration
-  * Command: `src/main/install-configuration-management.zsh`
-  * Results: Ansible and Git CLI applications are available to use on the command line.
-  * Verification: Installation verification passes for both
 
-## Provision ZSH
+### Command 
+* `src/main/install-configuration-management.zsh`
+
+#### Results
+* Ansible and Git CLI applications are enabled for use on the command line.
+
+#### Verification
+* Installation verification passes for both
+
+## Z shell configuration
   * Command: `ansible-playbook -f src/main/ansible/provision-zsh.yaml`
   * Results 
     * Installation tests pass
@@ -19,11 +30,12 @@
 
 ## Provision secrets management
 
-## Configure Java Development Tools
+## Configure java development tools
+
 
 # Installation
 
-## Git CLI
+## Git
 
 ### Installation
 
@@ -36,7 +48,7 @@
  * Package manager defaults.
 
 ### Verification
-* The `git --version` command must return version 2.39.0 or higher.
+* The `git --version` command must return version 2.39.0 or later.
 
 ## Ansible
 
@@ -47,10 +59,13 @@
 | Crostini, Debian, Ubuntu | None           | apt-get         | ansible      | latest  |
 | MacOS                    | None           | homebrew        | ansible      | latest  |
 
-* Configuration: Package manager defaults.
-* Verification: The `ansible-playbook --version` command must return version 'core 2.14.0' or higher.
+#### Configuration
+* Package manager defaults. 
 
-## Zsh: Z shell
+#### Verification
+* The `ansible-playbook --version` command must return version 'core 2.14.0' or later.
+
+## Z shell
 
 ### Dependencies
 * Ansible
@@ -66,17 +81,16 @@
 1. Make zsh the default shell with default answers to questions.
 2. Add these shell aliases to an interactive zsh session.
 
-| OS                       | Name    | Commands                                |
-|--------------------------|---------|-----------------------------------------|
-| All                      | lsd     | `ls -latdh`                             |
-| Crostini, Debian, Ubuntu | upgrade | `sudo apt-get upgrade -y; brew upgrade` |
-| MacOS                    | upgrade | `brew upgrade`                          |
+| OS           | Name    | Commands                                |
+|--------------|---------|-----------------------------------------|
+| All          | lsd     | `ls -latdh`                             |
+| Debian-based | upgrade | `sudo apt-get upgrade -y; brew upgrade` |
+| MacOS        | upgrade | `brew upgrade`                          |
 
-## Oh, My Zsh
+## Install and configure Oh, my zsh
 
-### Dependencies
-* Ansible
-* Zsh
+### Depends on 
+* Configuration Management
 
 ### Installation
 
